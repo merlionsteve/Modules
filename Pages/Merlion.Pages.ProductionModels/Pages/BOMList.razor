@@ -1,0 +1,207 @@
+﻿@page "/bom"
+@using Merlion.Base.DataAnnotations
+@using Merlion.Component.Pages
+@using Merlion.Component.Controls
+<style>
+    .border-bottom-dash {
+        border-bottom: 1px ridge var(--mud-palette-action-default-hover);
+    }
+
+    .text-gray {
+        color: var(--mud-palette-action-default);
+    }
+
+    .mud-svg-icon {
+        margin-bottom: -5px;
+    }
+</style>
+<PageLocation Title="@Loc["Bill of Material"]"></PageLocation>
+<div class="d-flex">
+    <div class="flex-0" style="min-width:600px">
+        <MudText Typo="Typo.subtitle2">@Loc["BOM List"]</MudText>
+            <Merlion.Component.Pages.SimplifiedDataGrid Items="vBOMs" SelectedItemChanged="SelectedBOMChanged">
+                <FuncTemplate Context="context">
+                    @if (_accessService.HasPermissionAsync("BOMManageBtns").Result)
+                {
+                    <MudButton Size="MudBlazor.Size.Small" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_=>context.ShowNewDialog("Create"))" Color="Color.Primary" Class="ma-1 pr-4">@Loc["New"]</MudButton>
+                }
+            </FuncTemplate>
+            <CustomColumnTemplate>
+                @switch (context.ColumnName)
+                {
+                    case "Product":
+                        <MudText>@context.Item.Product / @context.Item.Alternative</MudText>
+                        break;
+                }
+            </CustomColumnTemplate>
+            <ActionTemplate Context="context">
+                @if (_accessService.HasPermissionAsync("BOMManageBtns").Result)
+                {
+                    <MudIconButton Size="@MudBlazor.Size.Small" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary"
+                                   OnClick="@(_ =>context.ShowEditDialog("Edit","Edit"))" />
+                    <MudIconButton Size="@MudBlazor.Size.Small" Icon="@Icons.Material.Filled.DeleteOutline" Color="Color.Error"
+                                   OnClick="_=>DeleteBOM(context)" />
+                }
+            </ActionTemplate>
+            <EditTemplate Context="editContext">
+                <EditForm Model="editContext.DataModel" OnValidSubmit="_=>SaveBOM(editContext)">
+                    <DataAnnotationsValidator />
+                    <MudText Typo="Typo.body2">@Loc["Code"]</MudText>
+                        <MudTextField Class="mb-4" @bind-Value="editContext.DataModel.Code" Disabled="@(editContext.OperationType=="Edit")" For="@(() => editContext.DataModel.Code)" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                        <MudGrid>
+                            <MudItem xs="18" sm="9">
+                                <MudStack Row="false" Spacing="0">
+                                    <MudText Typo="Typo.body2">@Loc["Product"]</MudText>
+                                    <MudSelect Class="mb-4" @bind-Value="editContext.DataModel.ProductCode" Disabled="@(editContext.OperationType=="Edit")" For="@(() => editContext.DataModel.ProductCode)" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true">
+                                        @{
+                                        bool set = CacheOfMaterials.Exists(x => x.CategoryCode == "FERT");
+                                        foreach (var material in CacheOfMaterials)
+                                        {
+                                            if (set && (material.CategoryCode == "FERT" || material.CategoryCode == "HARB") || editContext.OperationType == "Edit")
+                                            {
+                                                <MudSelectItem Value="@(material.Code)">
+                                                    @material.ShortDescription <MudElement Class="ml-4"
+                                                                                           Style="color:var(--mud-palette-text-disabled);"
+                                                                                           rel="noopener noreferrer">-  @material.Code</MudElement>
+                                                    </MudSelectItem>
+                                            }
+                                        }
+                                    }
+                                </MudSelect>
+                            </MudStack>
+                        </MudItem>
+                        <MudItem xs="6" sm="3">
+                            <MudStack Row="false" Spacing="0">
+                                <MudText Typo="Typo.body2">@Loc["Alternative"]</MudText>
+                                    <MudNumericField @bind-Value="@editContext.DataModel.Alternative" Disabled="@(editContext.OperationType=="Edit")" InvertMouseWheel="true" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                                     Min="1" Max="10" Step="1" Class="mb-4" />
+                                </MudStack>
+                            </MudItem>
+                        </MudGrid>
+
+                        <MudText Typo="Typo.body2">@Loc["Unit"]</MudText>
+                        @{
+                        editContext.DataModel.Unit = CacheOfMaterials.FirstOrDefault(x => x.Code == editContext.DataModel.ProductCode)?.BaseUnit;
+                    }
+                    <MudTextField Class="mb-4" Value="editContext.DataModel.Unit" Disabled="true" For="@(() => editContext.DataModel.Unit)" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+
+                    <MudText Typo="Typo.body2">@Loc["Base Quantity"]</MudText>
+                        <MudNumericField Format="N2" T="float" @bind-Value="editContext.DataModel.BaseQuantity" For="@(() => editContext.DataModel.BaseQuantity)" InvertMouseWheel="true" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                         Min="1" Max="5000" Step="1" Class="mb-4" />
+                        <MudStack Row="true" Class="ml-n1 align-center">
+                            <MudCheckBox T="bool" Dense="true" Size="Size.Small" Color="Color.Primary" @bind-Value="editContext.DataModel.IsActive"></MudCheckBox>
+                            <MudText Typo="Typo.body2" Style="user-select:none;" Class="ml-n2">@Loc["Is Active"]</MudText>
+                        </MudStack>
+                        <div class="my-4 d-flex">
+                            <MudSpacer />
+                            <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Default" Class="px-10 mt-2 mr-2" OnClick="_=>editContext.CloseDialog()">@Loc["Cancel"]</MudButton>
+                            <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Class="px-10 mt-2">@Loc["Save"]</MudButton>
+                        </div>
+                    </EditForm>
+                </EditTemplate>
+            </Merlion.Component.Pages.SimplifiedDataGrid>
+        </div>
+        <MudDivider Vertical="true" Class="mx-2"></MudDivider>
+        <div class="flex-1">
+            <MudText Typo="Typo.subtitle2" Class="mb-2">@Loc["Selected BOM"] : <b>@SelectedBOM?.Code</b></MudText>
+        <MudPaper Elevation="1" Class="py-4 px-6">
+            <MudGrid>
+                <MudItem xs="6" sm="3" Class="border-bottom-dash text-gray">
+                    <MudText Typo="Typo.body2">@Loc["Product Code"]</MudText>
+                    </MudItem>
+                    <MudItem xs="6" sm="3" Class="border-bottom-dash">
+                        <MudText Typo="Typo.body2">@SelectedBOM?.ProductCode</MudText>
+                    </MudItem>
+                    <MudItem xs="6" sm="3" Class="border-bottom-dash text-gray">
+                        <MudText Typo="Typo.body2">@Loc["Product Name"]</MudText>
+                    </MudItem>
+                    <MudItem xs="6" sm="3" Class="border-bottom-dash">
+                        <MudText Typo="Typo.body2">@SelectedBOM?.Product</MudText>
+                    </MudItem>
+
+                    <MudItem xs="6" sm="3" Class="border-bottom-dash text-gray">
+                        <MudText Typo="Typo.body2">@Loc["Alternative"]</MudText>
+                    </MudItem>
+                    <MudItem xs="6" sm="3" Class="border-bottom-dash">
+                        <MudText Typo="Typo.body2">@SelectedBOM?.Alternative</MudText>
+                    </MudItem>
+                    <MudItem xs="6" sm="3" Class="border-bottom-dash text-gray">
+                        <MudText Typo="Typo.body2">@Loc["Is Active"]</MudText>
+                    </MudItem>
+                    <MudItem xs="6" sm="3" Class="border-bottom-dash">
+                        @if (SelectedBOM is not null)
+                    {
+                        <MudIcon Icon="@(SelectedBOM.IsActive?Icons.Material.Filled.Check:Icons.Material.Filled.Close)" Color="@(SelectedBOM.IsActive?Color.Primary:Color.Error)" Size="Size.Small"></MudIcon>
+
+                    }
+                </MudItem>
+
+                <MudItem xs="6" sm="3" Class="text-gray">
+                    <MudText Typo="Typo.body2">@Loc["Base Quantity"]</MudText>
+                    </MudItem>
+                    <MudItem xs="6" sm="3">
+                        <MudText Typo="Typo.body2">@SelectedBOM?.BaseQuantity</MudText>
+                    </MudItem>
+                    <MudItem xs="6" sm="3" Class="text-gray">
+                        <MudText Typo="Typo.body2">@Loc["Unit"]</MudText>
+                    </MudItem>
+                    <MudItem xs="6" sm="3">
+                        <MudText Typo="Typo.body2">@SelectedBOM?.Unit</MudText>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+            <Merlion.Component.Pages.SimplifiedDataGrid Items="vBOMComponents" SelectedItemChanged="SelectedBOMComponentChanged">
+                <FuncTemplate Context="context">
+                    @if (_accessService.HasPermissionAsync("BOMComponentManageBtns").Result)
+                {
+                    <MudButton Disabled="@(SelectedBOM is null)" Size="MudBlazor.Size.Small" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_=>context.ShowNewDialog("Create"))" Color="Color.Primary" Class="ma-1 pr-4">@Loc["New"]</MudButton>
+                }
+            </FuncTemplate>
+            <ActionTemplate Context=" context">
+                @if (_accessService.HasPermissionAsync("BOMComponentManageBtns").Result)
+                {
+                    <MudIconButton Size="@MudBlazor.Size.Small" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary"
+                                   OnClick="@(_ =>context.ShowEditDialog("Edit","Edit"))" />
+                    <MudIconButton Size="@MudBlazor.Size.Small" Icon="@Icons.Material.Filled.DeleteOutline" Color="Color.Error"
+                                   OnClick="_=>DeleteBOMComponent(context)" />
+                }
+            </ActionTemplate>
+            <EditTemplate Context="editContext">
+                <EditForm Model="editContext.DataModel" OnValidSubmit="_=>SaveBOMComponent(editContext)">
+                    <DataAnnotationsValidator />
+                    <MudText Typo="Typo.body2">@Loc["BOM Code"]</MudText>
+                        @{
+                        editContext.DataModel!.BOMCode = SelectedBOM.Code;
+                    }
+                    <MudTextField Class="mb-4" @bind-Value="editContext.DataModel.BOMCode" Disabled="true" For="@(() => editContext.DataModel.BOMCode)" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                    <MudText Typo="Typo.body2">@Loc["Component Code"]</MudText>
+                        <MudSelect Class="mb-4" @bind-Value="editContext.DataModel.ComponentCode" Disabled="@(editContext.OperationType=="Edit")" For="@(() => editContext.DataModel.ComponentCode)" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true">
+                            @{
+                            foreach (var material in CacheOfMaterials)
+                            {
+                                <MudSelectItem Value="@(material.Code)">
+                                    @material.ShortDescription <MudElement Class="ml-4"
+                                                                           Style="color:var(--mud-palette-text-disabled);"
+                                                                           rel="noopener noreferrer">-  @material.Code</MudElement>
+                                    </MudSelectItem>
+                            }
+                        }
+                    </MudSelect>
+                    <MudText Typo="Typo.body2">@Loc["Component Unit"]</MudText>
+                        @{
+                        editContext.DataModel.Unit = CacheOfMaterials.FirstOrDefault(x => x.Code == editContext.DataModel.ComponentCode)?.BaseUnit;
+                    }
+                    <MudTextField Class="mb-4" @bind-Value="editContext.DataModel.Unit" Disabled="true" For="@(() => editContext.DataModel.Unit)" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                    <MudText Typo="Typo.body2">@Loc["Quantity"]</MudText>
+                        <MudNumericField Format="N2" T="float" @bind-Value="editContext.DataModel.Quantity" For="@(() => editContext.DataModel.Quantity)" InvertMouseWheel="true" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                         Min="1" Max="5000" Step="1" Class="mb-4" />
+                        <div class="my-4 d-flex">
+                            <MudSpacer />
+                            <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Default" Class="px-10 mt-2 mr-2" OnClick="_=>editContext.CloseDialog()">@Loc["Cancel"]</MudButton>
+                            <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Class="px-10 mt-2">@Loc["Save"]</MudButton>
+                        </div>
+                    </EditForm>
+                </EditTemplate>
+            </Merlion.Component.Pages.SimplifiedDataGrid>
+        </div>
+    </div>

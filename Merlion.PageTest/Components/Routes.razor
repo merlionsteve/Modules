@@ -1,0 +1,11 @@
+﻿@rendermode InteractiveServer
+<Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="@(new System.Reflection.Assembly[]{
+typeof(Merlion.Pages.Materials.Pages.MaterialMasterList).Assembly,
+typeof(Merlion.Pages.TruckBays.Pages.TruckBayList).Assembly,
+typeof(Merlion.Pages.ProductionModels.Pages.BOMList).Assembly,
+})">
+    <Found Context="routeData">
+        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
+        <FocusOnNavigate RouteData="routeData" Selector="h1" />
+    </Found>
+</Router>

@@ -1,0 +1,91 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Merlion.PageTest", "Merlion.PageTest\Merlion.PageTest.csproj", "{DFF05BA7-A896-425F-90F4-03B8FD0A68EC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Merlion.Report", "Merlion.Modules\Merlion.Report\Merlion.Report.csproj", "{E87D96FA-AE61-4192-8E7B-9595072BC792}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pages", "Pages", "{6E81B550-889B-4E7F-9F09-61AD4FA2F68A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Merlion.Pages.Customers", "Pages\Merlion.Pages.Customers\Merlion.Pages.Customers.csproj", "{FEE16333-751A-4556-B743-CB6F3583B1D8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Merlion.Pages.TruckBays", "Pages\Merlion.Pages.TruckBays\Merlion.Pages.TruckBays.csproj", "{2DC3F8DE-AAF2-423C-BDAE-CAB7FEFE53A6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Merlion.Pages.Materials", "Pages\Merlion.Pages.Materials\Merlion.Pages.Materials.csproj", "{0A3085D5-6FE5-44EA-92C6-070A3639FE14}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Merlion.Pages.ProductionModels", "Pages\Merlion.Pages.ProductionModels\Merlion.Pages.ProductionModels.csproj", "{AA5B16A1-2EC7-4080-9958-1E96C6338DEB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DFF05BA7-A896-425F-90F4-03B8FD0A68EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFF05BA7-A896-425F-90F4-03B8FD0A68EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFF05BA7-A896-425F-90F4-03B8FD0A68EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFF05BA7-A896-425F-90F4-03B8FD0A68EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E87D96FA-AE61-4192-8E7B-9595072BC792}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E87D96FA-AE61-4192-8E7B-9595072BC792}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E87D96FA-AE61-4192-8E7B-9595072BC792}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E87D96FA-AE61-4192-8E7B-9595072BC792}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEE16333-751A-4556-B743-CB6F3583B1D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEE16333-751A-4556-B743-CB6F3583B1D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEE16333-751A-4556-B743-CB6F3583B1D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEE16333-751A-4556-B743-CB6F3583B1D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DC3F8DE-AAF2-423C-BDAE-CAB7FEFE53A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DC3F8DE-AAF2-423C-BDAE-CAB7FEFE53A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DC3F8DE-AAF2-423C-BDAE-CAB7FEFE53A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DC3F8DE-AAF2-423C-BDAE-CAB7FEFE53A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A3085D5-6FE5-44EA-92C6-070A3639FE14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A3085D5-6FE5-44EA-92C6-070A3639FE14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A3085D5-6FE5-44EA-92C6-070A3639FE14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A3085D5-6FE5-44EA-92C6-070A3639FE14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA5B16A1-2EC7-4080-9958-1E96C6338DEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA5B16A1-2EC7-4080-9958-1E96C6338DEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA5B16A1-2EC7-4080-9958-1E96C6338DEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA5B16A1-2EC7-4080-9958-1E96C6338DEB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FEE16333-751A-4556-B743-CB6F3583B1D8} = {6E81B550-889B-4E7F-9F09-61AD4FA2F68A}
+		{2DC3F8DE-AAF2-423C-BDAE-CAB7FEFE53A6} = {6E81B550-889B-4E7F-9F09-61AD4FA2F68A}
+		{0A3085D5-6FE5-44EA-92C6-070A3639FE14} = {6E81B550-889B-4E7F-9F09-61AD4FA2F68A}
+		{AA5B16A1-2EC7-4080-9958-1E96C6338DEB} = {6E81B550-889B-4E7F-9F09-61AD4FA2F68A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C76E8C3C-F3F1-4C24-8291-0A0D2FBC4BB9}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 7
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://yudk.visualstudio.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Merlion.PageTest\\Merlion.PageTest.csproj
+		SccProjectName1 = Merlion.PageTest
+		SccLocalPath1 = Merlion.PageTest
+		SccProjectUniqueName2 = Merlion.Modules\\Merlion.Report\\Merlion.Report.csproj
+		SccProjectName2 = Merlion.Modules/Merlion.Report
+		SccLocalPath2 = Merlion.Modules\\Merlion.Report
+		SccProjectUniqueName3 = Pages\\Merlion.Pages.Customers\\Merlion.Pages.Customers.csproj
+		SccProjectTopLevelParentUniqueName3 = Merlion.PageTest.sln
+		SccProjectName3 = Pages/Merlion.Pages.Customers
+		SccLocalPath3 = Pages\\Merlion.Pages.Customers
+		SccProjectUniqueName4 = Pages\\Merlion.Pages.TruckBays\\Merlion.Pages.TruckBays.csproj
+		SccProjectTopLevelParentUniqueName4 = Merlion.PageTest.sln
+		SccProjectName4 = Pages/Merlion.Pages.TruckBays
+		SccLocalPath4 = Pages\\Merlion.Pages.TruckBays
+		SccProjectUniqueName5 = Pages\\Merlion.Pages.Materials\\Merlion.Pages.Materials.csproj
+		SccProjectTopLevelParentUniqueName5 = Merlion.PageTest.sln
+		SccProjectName5 = Pages/Merlion.Pages.Materials
+		SccLocalPath5 = Pages\\Merlion.Pages.Materials
+		SccProjectUniqueName6 = Pages\\Merlion.Pages.ProductionModels\\Merlion.Pages.ProductionModels.csproj
+		SccProjectTopLevelParentUniqueName6 = Merlion.PageTest.sln
+		SccProjectName6 = Pages/Merlion.Pages.ProductionModels
+		SccLocalPath6 = Pages\\Merlion.Pages.ProductionModels
+	EndGlobalSection
+EndGlobal

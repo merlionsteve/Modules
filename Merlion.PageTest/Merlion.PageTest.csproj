@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <SignAssembly>False</SignAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Merlion.Modules\Merlion.Report\Merlion.Report.csproj" />
+    <ProjectReference Include="..\Pages\Merlion.Pages.Customers\Merlion.Pages.Customers.csproj" />
+    <ProjectReference Include="..\Pages\Merlion.Pages.Materials\Merlion.Pages.Materials.csproj" />
+    <ProjectReference Include="..\Pages\Merlion.Pages.ProductionModels\Merlion.Pages.ProductionModels.csproj" />
+    <ProjectReference Include="..\Pages\Merlion.Pages.TruckBays\Merlion.Pages.TruckBays.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Merlion.Base">
+      <HintPath>..\Merlion.Base\bin\Debug\net8.0\Merlion.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Merlion.Database">
+      <HintPath>..\Merlion.Database\bin\Debug\net8.0\Merlion.Database.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

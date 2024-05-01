@@ -1,0 +1,178 @@
+﻿@page "/materialmaster"
+@using Merlion.Base.DataAnnotations
+@using Merlion.Component.Pages
+@using Merlion.Component.Controls
+
+<PageLocation Title="@Loc["Materials Master"]"></PageLocation>
+<div class="d-flex flex-grow-1 gap-3" Style="height:calc(100vh - var(--mud-appbar-height) - 50px); ">
+    <MudPaper Elevation="0" Class="mt-2 px-2">
+        <MudList Clickable="true" Style="min-width:300px;overflow:auto; height:100%;" SelectedValueChanged="SelectedCategoryChanged">
+            @foreach (var category in Categories)
+            {
+                <MudListItem Value="@category">
+                    <MudAvatar Color="@(SelectedCategory== category?Color.Primary:Color.Default)" Class="mr-2" Size="Size.Medium">@category.Name.First()</MudAvatar><MudText Typo="Typo.button">@category.Name</MudText>
+                    </MudListItem>
+            }
+        </MudList>
+    </MudPaper>
+    <div class="flex-grow-1">
+        <Merlion.Component.Pages.SimplifiedDataGrid Items="vMaterialMasters">
+            <FuncTemplate Context="context">
+                @if (_accessService.HasPermissionAsync("MaterialMasterAddBtn").Result)
+                {
+                    <MudButton Size="MudBlazor.Size.Small" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_=>context.ShowNewDialog("Create"))" Color="Color.Primary" Class="ma-1 pr-4">@Loc["New"]</MudButton>
+                }
+            </FuncTemplate>
+
+            <ActionTemplate Context="context">
+                @if (_accessService.HasPermissionAsync("MaterialMasterEditBtn").Result)
+                {
+                    <MudIconButton Size="@MudBlazor.Size.Small" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary"
+                                   OnClick="@(_ =>context.ShowEditDialog("Edit","Edit"))" />
+                }
+                else
+                {
+                    <MudIconButton Size="@MudBlazor.Size.Small" Icon="@Icons.Material.Filled.RemoveRedEye" Color="Color.Primary"
+                                   OnClick="@(_ =>context.ShowEditDialog("Details","View"))" />
+                }
+
+                @if (_accessService.HasPermissionAsync("MaterialMasterDeleteBtn").Result)
+                {
+                    <MudIconButton Size="@MudBlazor.Size.Small" Icon="@Icons.Material.Filled.DeleteOutline" Color="Color.Error"
+                                   OnClick="_=>DeleteMaterialMaster(context)" />
+                }
+            </ActionTemplate>
+            <EditTemplate Context="editContext">
+                <EditForm Model="editContext.DataModel" OnValidSubmit="_=>SaveMaterialMaster(editContext)" style="width:900px;">
+                    <DataAnnotationsValidator />
+                    <MudGrid>
+                        <MudItem xs="6" sm="3">
+                            <MudPaper Class="mud-width-full" Elevation="0">
+                                <MudStack Row="false" Spacing="0">
+                                    <MudText Typo="Typo.body2">@Loc["Code"]</MudText>
+                                        <MudTextField Class="mb-4" AutoFocus @bind-Value="editContext.DataModel.Code" Disabled="@(editContext.OperationType=="Edit")" For="@(() => editContext.DataModel.Code)" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                                 </MudStack>
+                             </MudPaper>
+                         </MudItem>
+                         <MudItem xs="6" sm="3">
+                             <MudPaper Class="mud-width-full" Elevation="0">
+                                 <MudStack Row="false" Spacing="0">
+                                     <MudText Typo="Typo.body2">@Loc["Short Description"]</MudText>
+                                        <MudTextField Class="mb-4" @bind-Value="editContext.DataModel.ShortDescription" For="@(() => editContext.DataModel.ShortDescription)" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                                    </MudStack>
+                                </MudPaper>
+                            </MudItem>
+                            <MudItem xs="12" sm="6">
+                                <MudPaper Class="mud-width-full" Elevation="0">
+                                    <MudStack Row="false" Spacing="0">
+                                        <MudText Typo="Typo.body2">@Loc["Category"]</MudText>
+                                        <MudSelect Class="mb-4" @bind-Value="editContext.DataModel.CategoryCode" For="@(() => editContext.DataModel.CategoryCode)" Variant="Variant.Outlined" Margin="Margin.Dense" Dense="true">
+                                            @{
+                                            foreach (var ctmer in Categories)
+                                            {
+                                                <MudSelectItem Value="@(ctmer.Code)">
+                                                    @ctmer.Code <MudElement Class="ml-4"
+                                                                            Style="color:var(--mud-palette-text-disabled);"
+                                                                            rel="noopener noreferrer">-  @ctmer.Name</MudElement>
+                                                    </MudSelectItem>
+                                            }
+                                        }
+                                    </MudSelect>
+                                </MudStack>
+                            </MudPaper>
+                        </MudItem>
+                        <MudItem xs="6" sm="3">
+                            <MudPaper Class="mud-width-full" Elevation="0">
+                                <MudStack Row="false" Spacing="0">
+                                    <MudText Typo="Typo.body2">@Loc["Base Unit of Meassure"]</MudText>
+                                        <MudTextField Class="mb-4" @bind-Value="editContext.DataModel.BaseUnit" For="@(() => editContext.DataModel.BaseUnit)" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                                    </MudStack>
+                                </MudPaper>
+                            </MudItem>
+                            <MudItem xs="6" sm="3">
+                                <MudPaper Class="mud-width-full" Elevation="0">
+                                    <MudStack Row="false" Spacing="0">
+                                        <MudText Typo="Typo.body2">@Loc["Sales Unit of Meassure"]</MudText>
+                                        <MudTextField Class="mb-4" @bind-Value="editContext.DataModel.SalesUnit" For="@(() => editContext.DataModel.SalesUnit)" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                                    </MudStack>
+                                </MudPaper>
+                            </MudItem>
+                            <MudItem xs="6" sm="3">
+                                <MudPaper Class="mud-width-full" Elevation="0">
+                                    <MudStack Row="false" Spacing="0">
+                                        <MudText Typo="Typo.body2">@Loc["Specification of Sales Unit"]</MudText>
+                                        <MudTextField Class="mb-4" @bind-Value="editContext.DataModel.UnitSpec" For="@(() => editContext.DataModel.UnitSpec)" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                                    </MudStack>
+                                </MudPaper>
+                            </MudItem>
+                            <MudItem xs="6" sm="3">
+                                <MudPaper Class="mud-width-full" Elevation="0">
+                                    <MudStack Row="false" Spacing="0">
+                                        <MudText Typo="Typo.body2">@Loc["Factor(sales unit / base unit)"]</MudText>
+                                        <MudTextField Class="mb-4" @bind-Value="editContext.DataModel.UnitFactor" For="@(() => editContext.DataModel.UnitFactor)" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                                    </MudStack>
+                                </MudPaper>
+                            </MudItem>
+
+                            <MudItem xs="6" sm="3">
+                                <MudPaper Class="mud-width-full" Elevation="0">
+                                    <MudStack Row="false" Spacing="0">
+                                        <MudText Typo="Typo.body2">@Loc["Valid From"]</MudText>
+                                        <MudExtDatePicker Class="mb-4" @bind-Date="editContext.DataModel.ValidFrom" For="@(() => editContext.DataModel.ValidFrom)" MaxDate="@editContext.DataModel.ValidTo" DateFormat="yyyy-MM-dd" PickerVariant="PickerVariant.Dialog" Variant="Variant.Outlined" Margin="Margin.Dense"></MudExtDatePicker>
+                                    </MudStack>
+                                </MudPaper>
+                            </MudItem>
+                            <MudItem xs="6" sm="3">
+                                <MudPaper Class="mud-width-full" Elevation="0">
+                                    <MudStack Row="false" Spacing="0">
+                                        <MudText Typo="Typo.body2">@Loc["Valid To"]</MudText>
+                                        <MudExtDatePicker Class="mb-4" @bind-Date="editContext.DataModel.ValidTo" For="@(() => editContext.DataModel.ValidTo)" MinDate="@editContext.DataModel.ValidFrom" DateFormat="yyyy-MM-dd" PickerVariant="PickerVariant.Dialog" Variant="Variant.Outlined" Margin="Margin.Dense"></MudExtDatePicker>
+                                    </MudStack>
+                                </MudPaper>
+                            </MudItem>
+                            <MudItem xs="6" sm="3">
+                                <MudPaper Class="mud-width-full" Elevation="0">
+                                    <MudStack Row="false" Spacing="0">
+                                        <MudText Typo="Typo.body2">@Loc["Storage Conditions"]</MudText>
+                                        <MudTextField Class="mb-4" @bind-Value="editContext.DataModel.StorageConditions" For="@(() => editContext.DataModel.StorageConditions)" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                                    </MudStack>
+                                </MudPaper>
+                            </MudItem>
+                            <MudItem xs="6" sm="3">
+                                <MudPaper Class="mud-width-full" Elevation="0">
+                                    <MudStack Row="false" Spacing="0">
+                                        <MudText Typo="Typo.body2">@Loc["Validity Period(M)"]</MudText>
+                                        <MudNumericField Class="mb-4" @bind-Value="@editContext.DataModel.ValidityPeriod" For="@(() => editContext.DataModel.ValidityPeriod)" InvertMouseWheel="true" Variant="Variant.Outlined" Margin="Margin.Dense" Min="1" Max="240" Step="1" />
+                                    </MudStack>
+                                </MudPaper>
+                            </MudItem>
+                            <MudItem xs="6" sm="3">
+                                <MudPaper Class="mud-width-full" Elevation="0">
+                                    <MudStack Row="false" Spacing="0">
+                                        <MudText Typo="Typo.body2">@Loc["Plant"]</MudText>
+                                        <MudTextField Class="mb-4" @bind-Value="editContext.DataModel.Plant" For="@(() => editContext.DataModel.Plant)" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                                    </MudStack>
+                                </MudPaper>
+                            </MudItem>
+                            <MudItem xs="18" sm="9">
+                                <MudPaper Class="mud-width-full" Elevation="0">
+                                    <MudStack Row="false" Spacing="0">
+                                        <MudText Typo="Typo.body2">@Loc["Remark"]</MudText>
+                                        <MudTextField Class="mb-4" @bind-Value="editContext.DataModel.Remark" For="@(() => editContext.DataModel.Remark)" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                                    </MudStack>
+                                </MudPaper>
+                            </MudItem>
+                        </MudGrid>
+                        <div class="my-4 d-flex">
+                            <MudSpacer />
+                            @if (editContext.OperationType != "View")
+                        {
+                            <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Default" Class="px-10 mt-2 mr-2" OnClick="_=>editContext.CloseDialog()">@Loc["Cancel"]</MudButton>
+                            <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Class="px-10 mt-2">@Loc["Save"]</MudButton>
+                        }
+                    </div>
+                </EditForm>
+            </EditTemplate>
+        </Merlion.Component.Pages.SimplifiedDataGrid>
+    </div>
+</div>

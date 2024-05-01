@@ -1,0 +1,24 @@
+﻿@page "/"
+hello
+@namespace Merlion.Component.Pages
+@using MudBlazor
+<SimplifiedSearchHeader @bind-SearchText="SearchText" SearchHandler="InitialData">
+
+    </SimplifiedSearchHeader>
+
+    @SearchText
+    <MudButton ButtonType="ButtonType.Button" OnClick="Hello">Call Hello</MudButton>
+@code{
+    private string? SearchText;
+
+    private void InitialData()
+    {
+
+    }
+    private void Hello()
+    {
+        Console.WriteLine("hello");
+        SearchText = DateTime.Now.ToString();
+    }
+
+}

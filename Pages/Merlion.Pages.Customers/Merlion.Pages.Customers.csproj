@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <OutputType>Library</OutputType>
+    <UserSecretsId>6d6b30fe-e733-48ef-ac76-435ee9e8a855</UserSecretsId>
+    <FileVersion>2.0.0.0</FileVersion>
+    <Copyright></Copyright>
+    <AssemblyVersion>2.7.1.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+    <PackageReference Include="MudBlazor" Version="6.12.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
+    <PackageReference Include="System.Runtime" Version="4.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Merlion.Base">
+      <HintPath>..\..\Merlion.Base\bin\Debug\net8.0\Merlion.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Merlion.Component">
+      <HintPath>..\..\Merlion.Component\bin\Debug\net8.0\Merlion.Component.dll</HintPath>
+    </Reference>
+    <Reference Include="Merlion.Database">
+      <HintPath>..\..\Merlion.Database\bin\Debug\net8.0\Merlion.Database.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+</Project>

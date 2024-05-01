@@ -1,0 +1,37 @@
+﻿@using System.Net.Http
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.JSInterop
+@using Merlion.Pages.Materials
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.Extensions.Localization;
+@using Microsoft.JSInterop
+
+@using Serilog
+@using MudBlazor
+@using Merlion.Base.Access
+@using Merlion.Base.DataConfig
+@using Merlion.Component
+@using Merlion.Component.Data
+@using Merlion.Database
+
+@inject AuthenticationStateProvider _stateProvider;
+@inject IStringLocalizer Loc;
+@inject IAccessService _accessService;
+@inject ISnackbar _snackbarService;
+@inject IDialogService _dialogService;
+@inject IDataConfigHelper _dcHelper;
+@inject ProtectedLocalStorage _localStorage;
+@inject IPartialDbContextFactory _pdbFactory;
+@attribute [Authorize] 

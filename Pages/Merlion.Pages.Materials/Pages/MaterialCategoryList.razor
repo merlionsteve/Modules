@@ -1,0 +1,49 @@
+﻿@page "/materialcat"
+@using Merlion.Base.DataAnnotations
+@using Merlion.Component.Pages
+
+<PageLocation Title="@Loc["Materials Category"]"></PageLocation>
+<Merlion.Component.Pages.SimplifiedDataGrid Items="Items">
+    <FuncTemplate Context="context">
+        @if (_accessService.HasPermissionAsync("MaterialCategoryAddBtn").Result)
+        {
+            <MudButton Size="MudBlazor.Size.Small" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" OnClick="@(_=>context.ShowNewDialog("Create"))" Color="Color.Primary" Class="ma-1 pr-4">@Loc["New"]</MudButton>
+        }
+    </FuncTemplate>
+
+    <ActionTemplate Context="context">
+        @if (_accessService.HasPermissionAsync("MaterialCategoryEditBtn").Result)
+        {
+            <MudIconButton Size="@MudBlazor.Size.Small" Icon="@Icons.Material.Filled.Edit" Color="Color.Primary"
+                           OnClick="@(_ =>context.ShowEditDialog("Edit","Edit"))" />
+        }
+        @if (_accessService.HasPermissionAsync("MaterialCategoryDeleteBtn").Result)
+        {
+            <MudIconButton Size="@MudBlazor.Size.Small" Icon="@Icons.Material.Filled.DeleteOutline" Color="Color.Error"
+                           OnClick="_=>DeleteMaterialCategory(context)" />
+        }
+    </ActionTemplate>
+    <EditTemplate Context="editContext">
+        <EditForm Model="editContext.DataModel" OnValidSubmit="_=>SaveMaterialCategory(editContext)">
+            <DataAnnotationsValidator />
+            <MudText Typo="Typo.body2">@Loc["Code"]</MudText>
+                <MudTextField Class="mb-4" @bind-Value="editContext.DataModel.Code" Disabled="@(editContext.OperationType=="Edit")" For="@(() => editContext.DataModel.Code)" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                <MudText Typo="Typo.body2">@Loc["Name"]</MudText>
+                <MudTextField Class="mb-4" @bind-Value="editContext.DataModel.Name" For="@(() => editContext.DataModel.Name)" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                <MudText Typo="Typo.body2">@Loc["Description"]</MudText>
+                <MudTextField Class="mb-4" AutoGrow @bind-Value="editContext.DataModel.Description" For="@(() => editContext.DataModel.Description)" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+             @if (editContext.OperationType != "New")
+            {
+                <MudStack Row="true" Class="ml-n1 align-center">
+                    <MudCheckBox T="bool" Dense="true" Size="Size.Small" Color="Color.Primary" @bind-Value="editContext.DataModel.IsActive"></MudCheckBox>
+                    <MudText Typo="Typo.body2" Style="user-select:none;" Class="ml-n2">@Loc["Is Active"]</MudText>
+                    </MudStack>
+            }
+            <div class="my-4 d-flex">
+                <MudSpacer />
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Default" Class="px-10 mt-2 mr-2" OnClick="_=>editContext.CloseDialog()">@Loc["Cancel"]</MudButton>
+                    <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Class="px-10 mt-2">@Loc["Save"]</MudButton>
+                </div>
+            </EditForm>
+        </EditTemplate>
+    </Merlion.Component.Pages.SimplifiedDataGrid>

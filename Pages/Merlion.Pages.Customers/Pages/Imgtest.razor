@@ -1,0 +1,36 @@
+﻿@page "/imgtest"
+@using System.Reflection
+@using Merlion.Component.Controls;
+
+
+<MudExtFileUpload Accept=".png" FileMaxSize="1024000" SaveFileAsync="Save"></MudExtFileUpload>
+<MudImage Src="@src" ObjectFit="ObjectFit.Fill"></MudImage>
+@code {
+    private string src = "Avatars/logo.png";
+    private async Task<(bool Success, string FileName)> Save(IBrowserFile _file) 
+    {
+        //var ttt = Path.Combine(AppContext.BaseDirectory, "Avatars");
+        /*  string path = Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!;*/
+        string newFile = $"logo{Path.GetExtension(_file.Name)}";
+        // string fileName = Path.Combine(path, newFile);
+        string fileName = Path.Combine(AppContext.BaseDirectory, "Avatars", newFile);
+        try
+        {
+            using (var stream = new FileStream(fileName, FileMode.Create))
+            {
+                await _file.OpenReadStream(1024000).CopyToAsync(stream);
+                stream.Close();
+                src = "Avatars/logo.png?" + DateTime.Now.ToString("hhmmss");
+                StateHasChanged();
+                return (true, fileName);
+            }
+        }
+        catch (Exception ex)
+        {
+            Serilog.Log.Error(ex, "");
+            return (false, string.Empty);
+        }
+    }
+
+}
+
